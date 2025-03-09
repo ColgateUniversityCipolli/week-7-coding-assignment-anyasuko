@@ -25,6 +25,7 @@ pois.prob <- function(x, size, prob, type="<="){
   # Use dpois and ppois to conditionally return the correct probability
   #dpois is for PMF
   #ppois is for CDF
+  # prob is lambda
   
   #cdf of anything negative should just be zero
   if (x-1 < 0){
@@ -43,9 +44,9 @@ pois.prob <- function(x, size, prob, type="<="){
   #prob that x <= __ is cdf(__)
   less.or.equal <- ppois(x,prob,TRUE)
   #prob that x> __ is 1-cdf(__)
-  greater <- 1`- ppois(x,prob,TRUE)
+  greater <- 1- ppois(x,prob,TRUE)
   #prob that x>= __ is 1-cdf(__-1)
-  greater.or.equal <- 1-ppois(x,sub,TRUE)
+  greater.or.equal <- 1-ppois(sub,prob,TRUE)
   
   to.return <- data.frame(c("Equal", "Not Equal", "Less Than", "Less than or Equal to",
                             "Greater Than", "Greater Than or Equal to"),
@@ -63,6 +64,30 @@ pois.prob <- function(x, size, prob, type="<="){
 <<size="scriptsize">>=
 beta.prob <- function(x, size, prob, type="<="){
   # Use dbeta and pbeta to conditionally return the correct probability
+  #dbeta is for PMF
+  #pbeta is for CDF
+  
+  alpha <- .5 #??????????
+  beta <- .5 #???????????
+  
+  #prob that x=__ is just 0
+  equal <-0
+  #prob that x!=__ is 1
+  not.equal <- 1
+  #prob that x<__ is cdf(__)
+  less <- pbeta(x,alpha,beta)
+  #prob that x <= __ is cdf(__)
+  less.or.equal <- pbeta(x,alpha,beta)
+  #prob that x> __ is 1-cdf(__)
+  greater <- 1- pbeta(x,alpha,beta)
+  #prob that x>= __ is 1-cdf(__)
+  greater.or.equal <- 1-pbeta(x,alpha,beta)
+  
+  to.return <- data.frame(c("Equal", "Not Equal", "Less Than", "Less than or Equal to",
+                            "Greater Than", "Greater Than or Equal to"),
+                          c(equal,not.equal,less,less.or.equal,greater,greater.or.equal))
+  return(to.return)
+
 }
 @
 \end{enumerate}

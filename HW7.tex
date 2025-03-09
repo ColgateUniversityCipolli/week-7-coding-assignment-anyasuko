@@ -1,0 +1,151 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{xcolor}
+% maxwidth is the original width if it is less than linewidth
+% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.345, 0.345, 0.345}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.686,0.059,0.569}{#1}}%
+\newcommand{\hlsng}[1]{\textcolor[rgb]{0.192,0.494,0.8}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.678,0.584,0.686}{\textit{#1}}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0,0,0}{#1}}%
+\newcommand{\hldef}[1]{\textcolor[rgb]{0.345,0.345,0.345}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.161,0.373,0.58}{\textbf{#1}}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.69,0.353,0.396}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.333,0.667,0.333}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.737,0.353,0.396}{\textbf{#1}}}%
+\let\hlipl\hlkwb
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage[margin=1.0in]{geometry} % To set margins
+\usepackage{amsmath}  % This allows me to use the align functionality.
+                      % If you find yourself trying to replicate
+                      % something you found online, ensure you're
+                      % loading the necessary packages!
+\usepackage{amsfonts} % Math font
+\usepackage{fancyvrb}
+\usepackage{hyperref} % For including hyperlinks
+\usepackage[shortlabels]{enumitem}% For enumerated lists with labels specified
+                                  % We had to run tlmgr_install("enumitem") in R
+\usepackage{float}    % For telling R where to put a table/figure
+\usepackage{natbib}        %For the bibliography
+\bibliographystyle{apalike}%For the bibliography
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+  \begin{enumerate}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Question 1
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \item Write a \texttt{pois.prob()} function that computes $P(X=x)$, 
+    $P(X \neq x)$, $P(X<x)$, $P(X \leq x)$, $P(X > x)$, and $P(X \geq x).$ Enable the user to specify the rate parameter $\lambda$.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{pois.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{size}\hldef{,} \hlkwc{prob}\hldef{,} \hlkwc{type}\hldef{=}\hlsng{"<="}\hldef{)\{}
+  \hlcom{# Use dpois and ppois to conditionally return the correct probability}
+  \hlcom{#dpois is for PMF}
+  \hlcom{#ppois is for CDF}
+  \hlcom{# prob is lambda}
+
+  \hlcom{#cdf of anything negative should just be zero}
+  \hlkwa{if} \hldef{(x}\hlopt{-}\hlnum{1} \hlopt{<} \hlnum{0}\hldef{)\{}
+    \hldef{sub} \hlkwb{<-} \hlnum{0}
+  \hldef{\}}
+  \hlkwa{else}\hldef{\{}
+    \hldef{sub}\hlkwb{=}\hldef{prob}\hlopt{-}\hlnum{1}
+  \hldef{\}}
+
+  \hlcom{#prob that x=__ is just the pmf(__)}
+  \hldef{equal} \hlkwb{<-} \hlkwd{dpois}\hldef{(x,prob)}
+  \hlcom{#prob that x!=__ is 1-pmf(__)}
+  \hldef{not.equal} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{dpois}\hldef{(x,prob)}
+  \hlcom{#prob that x<__ is cdf(__ - 1)}
+  \hldef{less} \hlkwb{<-} \hlkwd{ppois}\hldef{(sub,prob,}\hlnum{TRUE}\hldef{)}
+  \hlcom{#prob that x <= __ is cdf(__)}
+  \hldef{less.or.equal} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hlcom{#prob that x> __ is 1-cdf(__)}
+  \hldef{greater} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hlcom{#prob that x>= __ is 1-cdf(__-1)}
+  \hldef{greater.or.equal} \hlkwb{<-} \hlnum{1}\hlopt{-}\hlkwd{ppois}\hldef{(sub,prob,}\hlnum{TRUE}\hldef{)}
+
+  \hldef{to.return} \hlkwb{<-} \hlkwd{data.frame}\hldef{(}\hlkwd{c}\hldef{(}\hlsng{"Equal"}\hldef{,} \hlsng{"Not Equal"}\hldef{,} \hlsng{"Less Than"}\hldef{,} \hlsng{"Less than or Equal to"}\hldef{,}
+                            \hlsng{"Greater Than"}\hldef{,} \hlsng{"Greater Than or Equal to"}\hldef{),}
+                          \hlkwd{c}\hldef{(equal,not.equal,less,less.or.equal,greater,greater.or.equal))}
+  \hlkwd{return}\hldef{(to.return)}
+\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+  % Question 2
+  %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+    \item Write a \texttt{beta.prob()} function that computes $P(X=x)$, 
+    $P(X \neq x)$, $P(X<x)$, $P(X \leq x)$, $P(X > x)$, and $P(X \geq x)$
+    for a beta distribution. Enable the user to specify the shape parameters
+    $\alpha$ and $\beta$.
+\begin{knitrout}\scriptsize
+\definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hldef{beta.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{size}\hldef{,} \hlkwc{prob}\hldef{,} \hlkwc{type}\hldef{=}\hlsng{"<="}\hldef{)\{}
+  \hlcom{# Use dbeta and pbeta to conditionally return the correct probability}
+  \hlcom{#dbeta is for PMF}
+  \hlcom{#pbeta is for CDF}
+  \hlcom{# prob is lambda}
+
+  \hlcom{#prob that x=__ is just 0}
+  \hldef{equal} \hlkwb{<-}\hlnum{0}
+  \hlcom{#prob that x!=__ is 1}
+  \hldef{not.equal} \hlkwb{<-} \hlnum{1}
+  \hlcom{#prob that x<__ is cdf(__)}
+  \hldef{less} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hlcom{#prob that x <= __ is cdf(__)}
+  \hldef{less.or.equal} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hlcom{#prob that x> __ is 1-cdf(__)}
+  \hldef{greater} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hlcom{#prob that x>= __ is 1-cdf(__)}
+  \hldef{greater.or.equal} \hlkwb{<-} \hlnum{1}\hlopt{-}\hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+
+  \hldef{to.return} \hlkwb{<-} \hlkwd{data.frame}\hldef{(}\hlkwd{c}\hldef{(}\hlsng{"Equal"}\hldef{,} \hlsng{"Not Equal"}\hldef{,} \hlsng{"Less Than"}\hldef{,} \hlsng{"Less than or Equal to"}\hldef{,}
+                            \hlsng{"Greater Than"}\hldef{,} \hlsng{"Greater Than or Equal to"}\hldef{),}
+                          \hlkwd{c}\hldef{(equal,not.equal,less,less.or.equal,greater,greater.or.equal))}
+  \hlkwd{return}\hldef{(to.return)}
+
+\hldef{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+\end{enumerate}
+\bibliography{bibliography}
+\end{document}
