@@ -73,32 +73,31 @@
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{pois.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{size}\hldef{,} \hlkwc{prob}\hldef{,} \hlkwc{type}\hldef{=}\hlsng{"<="}\hldef{)\{}
+\hldef{pois.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{size}\hldef{,} \hlkwc{lambda}\hldef{,} \hlkwc{type}\hldef{=}\hlsng{"<="}\hldef{)\{}
   \hlcom{# Use dpois and ppois to conditionally return the correct probability}
   \hlcom{#dpois is for PMF}
-  \hlcom{#ppois is for CDF}
-  \hlcom{# prob is lambda}
+  \hlcom{#ppois is for CDF }
 
   \hlcom{#cdf of anything negative should just be zero}
   \hlkwa{if} \hldef{(x}\hlopt{-}\hlnum{1} \hlopt{<} \hlnum{0}\hldef{)\{}
     \hldef{sub} \hlkwb{<-} \hlnum{0}
   \hldef{\}}
   \hlkwa{else}\hldef{\{}
-    \hldef{sub}\hlkwb{=}\hldef{prob}\hlopt{-}\hlnum{1}
+    \hldef{sub}\hlkwb{=}\hldef{lambda}\hlopt{-}\hlnum{1}
   \hldef{\}}
 
   \hlcom{#prob that x=__ is just the pmf(__)}
-  \hldef{equal} \hlkwb{<-} \hlkwd{dpois}\hldef{(x,prob)}
+  \hldef{equal} \hlkwb{<-} \hlkwd{dpois}\hldef{(x,lambda)}
   \hlcom{#prob that x!=__ is 1-pmf(__)}
-  \hldef{not.equal} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{dpois}\hldef{(x,prob)}
+  \hldef{not.equal} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{dpois}\hldef{(x,lambda)}
   \hlcom{#prob that x<__ is cdf(__ - 1)}
-  \hldef{less} \hlkwb{<-} \hlkwd{ppois}\hldef{(sub,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{less} \hlkwb{<-} \hlkwd{ppois}\hldef{(sub,lambda,}\hlnum{TRUE}\hldef{)}
   \hlcom{#prob that x <= __ is cdf(__)}
-  \hldef{less.or.equal} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{less.or.equal} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,lambda,}\hlnum{TRUE}\hldef{)}
   \hlcom{#prob that x> __ is 1-cdf(__)}
-  \hldef{greater} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{greater} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{ppois}\hldef{(x,lambda,}\hlnum{TRUE}\hldef{)}
   \hlcom{#prob that x>= __ is 1-cdf(__-1)}
-  \hldef{greater.or.equal} \hlkwb{<-} \hlnum{1}\hlopt{-}\hlkwd{ppois}\hldef{(sub,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{greater.or.equal} \hlkwb{<-} \hlnum{1}\hlopt{-}\hlkwd{ppois}\hldef{(sub,lambda,}\hlnum{TRUE}\hldef{)}
 
   \hldef{to.return} \hlkwb{<-} \hlkwd{data.frame}\hldef{(}\hlkwd{c}\hldef{(}\hlsng{"Equal"}\hldef{,} \hlsng{"Not Equal"}\hldef{,} \hlsng{"Less Than"}\hldef{,} \hlsng{"Less than or Equal to"}\hldef{,}
                             \hlsng{"Greater Than"}\hldef{,} \hlsng{"Greater Than or Equal to"}\hldef{),}
@@ -118,24 +117,23 @@
 \begin{knitrout}\scriptsize
 \definecolor{shadecolor}{rgb}{0.969, 0.969, 0.969}\color{fgcolor}\begin{kframe}
 \begin{alltt}
-\hldef{beta.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{size}\hldef{,} \hlkwc{prob}\hldef{,} \hlkwc{type}\hldef{=}\hlsng{"<="}\hldef{)\{}
+\hldef{beta.prob} \hlkwb{<-} \hlkwa{function}\hldef{(}\hlkwc{x}\hldef{,} \hlkwc{size}\hldef{,} \hlkwc{alpha}\hldef{,} \hlkwc{beta}\hldef{,} \hlkwc{type}\hldef{=}\hlsng{"<="}\hldef{)\{}
   \hlcom{# Use dbeta and pbeta to conditionally return the correct probability}
   \hlcom{#dbeta is for PMF}
   \hlcom{#pbeta is for CDF}
-  \hlcom{# prob is lambda}
 
   \hlcom{#prob that x=__ is just 0}
   \hldef{equal} \hlkwb{<-}\hlnum{0}
   \hlcom{#prob that x!=__ is 1}
   \hldef{not.equal} \hlkwb{<-} \hlnum{1}
   \hlcom{#prob that x<__ is cdf(__)}
-  \hldef{less} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{less} \hlkwb{<-} \hlkwd{pbeta}\hldef{(x,alpha,beta)}
   \hlcom{#prob that x <= __ is cdf(__)}
-  \hldef{less.or.equal} \hlkwb{<-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{less.or.equal} \hlkwb{<-} \hlkwd{pbeta}\hldef{(x,alpha,beta)}
   \hlcom{#prob that x> __ is 1-cdf(__)}
-  \hldef{greater} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{greater} \hlkwb{<-} \hlnum{1}\hlopt{-} \hlkwd{pbeta}\hldef{(x,alpha,beta)}
   \hlcom{#prob that x>= __ is 1-cdf(__)}
-  \hldef{greater.or.equal} \hlkwb{<-} \hlnum{1}\hlopt{-}\hlkwd{ppois}\hldef{(x,prob,}\hlnum{TRUE}\hldef{)}
+  \hldef{greater.or.equal} \hlkwb{<-} \hlnum{1}\hlopt{-}\hlkwd{pbeta}\hldef{(x,alpha,beta)}
 
   \hldef{to.return} \hlkwb{<-} \hlkwd{data.frame}\hldef{(}\hlkwd{c}\hldef{(}\hlsng{"Equal"}\hldef{,} \hlsng{"Not Equal"}\hldef{,} \hlsng{"Less Than"}\hldef{,} \hlsng{"Less than or Equal to"}\hldef{,}
                             \hlsng{"Greater Than"}\hldef{,} \hlsng{"Greater Than or Equal to"}\hldef{),}

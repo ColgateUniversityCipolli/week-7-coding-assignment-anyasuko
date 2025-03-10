@@ -21,32 +21,31 @@
     \item Write a \texttt{pois.prob()} function that computes $P(X=x)$, 
     $P(X \neq x)$, $P(X<x)$, $P(X \leq x)$, $P(X > x)$, and $P(X \geq x).$ Enable the user to specify the rate parameter $\lambda$.
 <<size="scriptsize">>=
-pois.prob <- function(x, size, prob, type="<="){
+pois.prob <- function(x, size, lambda, type="<="){
   # Use dpois and ppois to conditionally return the correct probability
   #dpois is for PMF
-  #ppois is for CDF
-  # prob is lambda
+  #ppois is for CDF 
   
   #cdf of anything negative should just be zero
   if (x-1 < 0){
     sub <- 0
   }
   else{
-    sub=prob-1
+    sub=lambda-1
   }
   
   #prob that x=__ is just the pmf(__)
-  equal <- dpois(x,prob)
+  equal <- dpois(x,lambda)
   #prob that x!=__ is 1-pmf(__)
-  not.equal <- 1- dpois(x,prob)
+  not.equal <- 1- dpois(x,lambda)
   #prob that x<__ is cdf(__ - 1)
-  less <- ppois(sub,prob,TRUE)
+  less <- ppois(sub,lambda,TRUE)
   #prob that x <= __ is cdf(__)
-  less.or.equal <- ppois(x,prob,TRUE)
+  less.or.equal <- ppois(x,lambda,TRUE)
   #prob that x> __ is 1-cdf(__)
-  greater <- 1- ppois(x,prob,TRUE)
+  greater <- 1- ppois(x,lambda,TRUE)
   #prob that x>= __ is 1-cdf(__-1)
-  greater.or.equal <- 1-ppois(sub,prob,TRUE)
+  greater.or.equal <- 1-ppois(sub,lambda,TRUE)
   
   to.return <- data.frame(c("Equal", "Not Equal", "Less Than", "Less than or Equal to",
                             "Greater Than", "Greater Than or Equal to"),
@@ -62,13 +61,10 @@ pois.prob <- function(x, size, prob, type="<="){
     for a beta distribution. Enable the user to specify the shape parameters
     $\alpha$ and $\beta$.
 <<size="scriptsize">>=
-beta.prob <- function(x, size, prob, type="<="){
+beta.prob <- function(x, size, alpha, beta, type="<="){
   # Use dbeta and pbeta to conditionally return the correct probability
   #dbeta is for PMF
   #pbeta is for CDF
-  
-  alpha <- .5 #??????????
-  beta <- .5 #???????????
   
   #prob that x=__ is just 0
   equal <-0
